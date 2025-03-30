@@ -43,7 +43,7 @@ type Renderer struct {
 func NewRenderer() *Renderer {
 	if consoleWriter == nil {
 		defaultWriter := NewStdoutWriter()
-		registerWriter(defaultWriter)
+		RegisterWriter(defaultWriter)
 	}
 
 	return &Renderer{

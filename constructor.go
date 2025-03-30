@@ -55,7 +55,7 @@ func WithReader(r Reader) Option {
 // WithWriter can be used to set a custom Writer object.
 func WithWriter(w Writer) Option {
 	return func(p *Prompt) error {
-		registerWriter(w)
+		RegisterWriter(w)
 		p.renderer.out = w
 		return nil
 	}

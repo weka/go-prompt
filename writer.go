@@ -10,7 +10,10 @@ var (
 	consoleWriter   Writer
 )
 
-func registerWriter(f Writer) {
+// RegisterWriter registers the global console writer.
+// This is not normally needed but may be useful for circumstances where the console
+// is not the the intenteded output (such as WASM environments.)
+func RegisterWriter(f Writer) {
 	consoleWriterMu.Lock()
 	defer consoleWriterMu.Unlock()
 	consoleWriter = f
