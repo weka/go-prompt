@@ -1,8 +1,8 @@
 package prompt
 
 import (
-	istrings "github.com/elk-language/go-prompt/strings"
 	"github.com/rivo/uniseg"
+	istrings "github.com/weka/go-prompt/strings"
 )
 
 // Position stores the coordinates

@@ -8,8 +8,8 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/elk-language/go-prompt/debug"
-	istrings "github.com/elk-language/go-prompt/strings"
+	"github.com/weka/go-prompt/debug"
+	istrings "github.com/weka/go-prompt/strings"
 )
 
 const inputBufferSize = 1024
