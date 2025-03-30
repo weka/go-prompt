@@ -253,6 +253,16 @@ func (w *VT100Writer) SetDisplayAttributes(fg, bg Color, attrs ...DisplayAttribu
 	w.WriteRaw(b)
 }
 
+// GetBuffer returns the underlying buffer for this VT100Writer instance.
+func (w *VT100Writer) GetBuffer() []byte {
+	return w.buffer
+}
+
+// SetBuffer replaces the underlying buffer for this VT100Writer instance.
+func (w *VT100Writer) SetBuffer(buffer []byte) {
+	w.buffer = buffer
+}
+
 var displayAttributeParameters = map[DisplayAttribute][]byte{
 	DisplayReset:        {'0'},
 	DisplayBold:         {'1'},

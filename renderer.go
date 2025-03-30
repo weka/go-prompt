@@ -41,11 +41,13 @@ type Renderer struct {
 
 // Build a new Renderer.
 func NewRenderer() *Renderer {
-	defaultWriter := NewStdoutWriter()
-	registerWriter(defaultWriter)
+	if consoleWriter == nil {
+		defaultWriter := NewStdoutWriter()
+		registerWriter(defaultWriter)
+	}
 
 	return &Renderer{
-		out:                          defaultWriter,
+		out:                          consoleWriter,
 		indentSize:                   DefaultIndentSize,
 		prefixCallback:               DefaultPrefixCallback,
 		prefixTextColor:              Blue,
