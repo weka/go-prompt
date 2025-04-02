@@ -6,7 +6,7 @@ import (
 	"testing"
 	"unicode/utf8"
 
-	istrings "github.com/elk-language/go-prompt/strings"
+	istrings "github.com/weka/go-prompt/strings"
 )
 
 func ExampleDocument_CurrentLine() {

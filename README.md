@@ -30,8 +30,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/elk-language/go-prompt"
-	pstrings "github.com/elk-language/go-prompt/strings"
+	"github.com/weka/go-prompt"
+	pstrings "github.com/weka/go-prompt/strings"
 )
 
 func completer(d prompt.Document) ([]prompt.Suggest, pstrings.RuneNumber, pstrings.RuneNumber) {

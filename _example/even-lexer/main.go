@@ -5,8 +5,8 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/elk-language/go-prompt"
-	"github.com/elk-language/go-prompt/strings"
+	"github.com/weka/go-prompt"
+	"github.com/weka/go-prompt/strings"
 )
 
 func main() {
