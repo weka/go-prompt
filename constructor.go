@@ -286,6 +286,15 @@ func WithExitChecker(fn ExitChecker) Option {
 	}
 }
 
+// WithAutoComplete enables (or disables) automatic completion (including appending a space)
+// when there is only a single unambiguous suggestion.
+func WithAutoComplete(autoComplete bool) Option {
+	return func(p *Prompt) error {
+		p.completion.autoComplete = autoComplete
+		return nil
+	}
+}
+
 func DefaultExecuteOnEnterCallback(p *Prompt, indentSize int) (int, bool) {
 	return 0, true
 }

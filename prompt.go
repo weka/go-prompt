@@ -279,11 +279,6 @@ keySwitch:
 			})
 			return true
 		}
-	case ControlI:
-		p.updateSuggestions(func() {
-			p.completion.Next()
-		})
-		return true
 	case Up:
 		if completing {
 			p.updateSuggestions(func() {
@@ -291,12 +286,28 @@ keySwitch:
 			})
 			return true
 		}
-	case Tab:
+	case Tab, ControlI:
 		if completionLen > 0 {
 			// If there are any suggestions, select the next one
 			p.updateSuggestions(func() {
 				p.completion.Next()
 			})
+
+			// If we have just a single possible completion, then automatically complete
+			// it and add a space.  The assumption is that we will always complete whole words,
+			// and not expect for example an equals sign or something after the completion.
+			if completionLen == 1 && p.completion.autoComplete {
+				if s, ok := p.completion.GetSelectedSuggestion(); ok {
+					w := p.buffer.Document().GetWordBeforeCursorUntilSeparator(p.completion.wordSeparator)
+					if w != "" {
+						p.buffer.DeleteBeforeCursorRunes(istrings.RuneCountInString(w), cols, rows)
+					}
+					p.buffer.InsertTextMoveCursor(s.Text+" ", cols, rows, false)
+					p.completionReset = true
+					doc := *p.buffer.Document()
+					p.completion.UpdateNext(doc)
+				}
+			}
 
 			return true
 		}

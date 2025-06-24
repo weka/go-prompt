@@ -36,6 +36,7 @@ type CompletionManager struct {
 	verticalScroll int
 	wordSeparator  string
 	showAtStart    bool
+	autoComplete   bool
 }
 
 // GetSelectedSuggestion returns the selected item.
@@ -65,6 +66,15 @@ func (c *CompletionManager) Reset() {
 
 // Update the suggestions.
 func (c *CompletionManager) Update(in Document) {
+	c.tmp, c.startCharIndex, c.endCharIndex = c.completer(in)
+}
+
+// Update the suggestions, after completing a full word (this means that the selected
+// location will be empty).  This is semantically the same as Reset() followed by Update(),
+// but it avoids an extra call to the completer.
+func (c *CompletionManager) UpdateNext(in Document) {
+	c.selected = -1
+	c.verticalScroll = 0
 	c.tmp, c.startCharIndex, c.endCharIndex = c.completer(in)
 }
 
