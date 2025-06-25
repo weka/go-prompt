@@ -193,7 +193,7 @@ func (p *Prompt) feed(b []byte) (shouldExit bool, rerender bool, userInput *User
 
 			var indentStrBuilder strings.Builder
 			indentUnitCount := indent * p.renderer.indentSize
-			for i := 0; i < indentUnitCount; i++ {
+			for range indentUnitCount {
 				indentStrBuilder.WriteRune(IndentUnit)
 			}
 			p.buffer.InsertTextMoveCursor(indentStrBuilder.String(), cols, rows, false)
@@ -246,7 +246,7 @@ func (p *Prompt) feed(b []byte) (shouldExit bool, rerender bool, userInput *User
 		}
 	case NotDefined:
 		var checked bool
-		checked, rerender = p.handleASCIICodeBinding(b, cols, rows)
+		checked, rerender = p.handleASCIICodeBinding(b)
 
 		if checked {
 			return false, rerender, nil
@@ -450,7 +450,7 @@ func (p *Prompt) handleKeyBinding(key Key, cols istrings.Width, rows int) (shoul
 	return shouldExit, rerender
 }
 
-func (p *Prompt) handleASCIICodeBinding(b []byte, cols istrings.Width, rows int) (checked, rerender bool) {
+func (p *Prompt) handleASCIICodeBinding(b []byte) (checked, rerender bool) {
 	for _, kb := range p.ASCIICodeBindings {
 		if bytes.Equal(kb.ASCIICode, b) {
 			result := kb.Fn(p)
