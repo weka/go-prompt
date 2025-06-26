@@ -503,8 +503,10 @@ func (p *Prompt) Input() string {
 	}
 }
 
-// Input starts the prompt, lets the user
+// InputCtx starts the prompt, lets the user
 // input a single line and returns this line as a string.
+// It supports a context that can be canceled, and reports an
+// error if the user canceled (ctx.Err()) or control D (io.EOF).
 func (p *Prompt) InputCtx(ctx context.Context) (string, error) {
 	defer debug.Close()
 	debug.Log("start prompt")
