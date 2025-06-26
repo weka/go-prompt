@@ -295,6 +295,20 @@ func WithAutoComplete(autoComplete bool) Option {
 	}
 }
 
+func WithNoEcho(noEcho bool) Option {
+	return func(p *Prompt) error {
+		p.renderer.noEcho = noEcho
+		return nil
+	}
+}
+
+func WithMask(mask rune) Option {
+	return func(p *Prompt) error {
+		p.renderer.maskRune = mask
+		return nil
+	}
+}
+
 func DefaultExecuteOnEnterCallback(p *Prompt, indentSize int) (int, bool) {
 	return 0, true
 }

@@ -18,7 +18,9 @@ type Renderer struct {
 	title             string
 	row               int
 	col               istrings.Width
-	indentSize        int // How many spaces constitute a single indentation level
+	indentSize        int  // How many spaces constitute a single indentation level
+	maskRune          rune // display the given character instead of the entry (masked password)
+	noEcho            bool // display nothing (except the prefix) at all (more secure)
 
 	previousCursor Position
 
@@ -289,7 +291,14 @@ func (r *Renderer) flush() {
 
 func (r *Renderer) renderLine(prefix, line string, color Color) {
 	r.renderPrefix(prefix)
-	r.writeStringColor(line, color)
+	if r.noEcho {
+		return
+	}
+	if r.maskRune != 0 {
+		r.writeStringColor(strings.Repeat(string(r.maskRune), int(istrings.GetWidth(line))), color)
+	} else {
+		r.writeStringColor(line, color)
+	}
 }
 
 func (r *Renderer) writeStringColor(text string, color Color) {

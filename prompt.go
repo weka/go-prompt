@@ -2,6 +2,8 @@ package prompt
 
 import (
 	"bytes"
+	"context"
+	"io"
 	"os"
 	"strings"
 	"time"
@@ -495,6 +497,43 @@ func (p *Prompt) Input() string {
 				p.completion.Update(*p.buffer.Document())
 				p.renderer.Render(p.buffer, p.completion, p.lexer)
 			}
+		default:
+			time.Sleep(10 * time.Millisecond)
+		}
+	}
+}
+
+// Input starts the prompt, lets the user
+// input a single line and returns this line as a string.
+func (p *Prompt) InputCtx(ctx context.Context) (string, error) {
+	defer debug.Close()
+	debug.Log("start prompt")
+	p.setup()
+	defer p.Close()
+
+	if p.completion.showAtStart {
+		p.completion.Update(*p.buffer.Document())
+	}
+
+	p.renderer.Render(p.buffer, p.completion, p.lexer)
+	bufCh := make(chan []byte, 128)
+	stopReadBufCh := make(chan struct{})
+	go p.readBuffer(bufCh, stopReadBufCh)
+	defer close(stopReadBufCh)
+
+	for {
+		select {
+		case b := <-bufCh:
+			if shouldExit, rerender, input := p.feed(b); shouldExit {
+				return "", io.EOF
+			} else if input != nil {
+				return input.input, nil
+			} else if rerender {
+				p.completion.Update(*p.buffer.Document())
+				p.renderer.Render(p.buffer, p.completion, p.lexer)
+			}
+		case <-ctx.Done():
+			return "", ctx.Err()
 		default:
 			time.Sleep(10 * time.Millisecond)
 		}
