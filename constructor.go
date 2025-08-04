@@ -270,6 +270,15 @@ func WithShowCompletionAtStart() Option {
 	}
 }
 
+// WithStopCompletionAtEnd to prevent nagivating off the end of the completion list.
+// This will keep the cursor where it is on the completion menu.  (Use ESC to leave it.)
+func WithStopCompletionAtEnd() Option {
+	return func(p *Prompt) error {
+		p.completion.stopAtEnd = true
+		return nil
+	}
+}
+
 // WithBreakLineCallback to run a callback at every break line
 func WithBreakLineCallback(fn func(*Document)) Option {
 	return func(p *Prompt) error {

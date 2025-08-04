@@ -37,6 +37,7 @@ type CompletionManager struct {
 	wordSeparator  string
 	showAtStart    bool
 	autoComplete   bool
+	stopAtEnd      bool
 }
 
 // GetSelectedSuggestion returns the selected item.
@@ -80,20 +81,24 @@ func (c *CompletionManager) UpdateNext(in Document) {
 
 // Select the previous suggestion item.
 func (c *CompletionManager) Previous() {
-	if c.verticalScroll == c.selected && c.selected > 0 {
-		c.verticalScroll--
+	if c.selected > 0 || !c.stopAtEnd {
+		if c.verticalScroll == c.selected && c.selected > 0 {
+			c.verticalScroll--
+		}
+		c.selected--
+		c.update()
 	}
-	c.selected--
-	c.update()
 }
 
 // Next to select the next suggestion item.
 func (c *CompletionManager) Next() int {
-	if c.verticalScroll+int(c.max)-1 == c.selected {
-		c.verticalScroll++
+	if c.selected < len(c.tmp)-1 || !c.stopAtEnd {
+		if c.verticalScroll+int(c.max)-1 == c.selected {
+			c.verticalScroll++
+		}
+		c.selected++
+		c.update()
 	}
-	c.selected++
-	c.update()
 	return c.selected
 }
 
