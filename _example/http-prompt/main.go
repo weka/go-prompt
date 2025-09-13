@@ -191,6 +191,7 @@ func main() {
 		prompt.WithPrefixCallback(livePrefix(u.String()+"> ")),
 		prompt.WithTitle("http-prompt"),
 		prompt.WithCompleter(completer),
+		prompt.WithHideInactiveCompletion(),
 	)
 	p.Run()
 }

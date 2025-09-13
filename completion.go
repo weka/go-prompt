@@ -38,6 +38,7 @@ type CompletionManager struct {
 	showAtStart    bool
 	autoComplete   bool
 	stopAtEnd      bool
+	hideInactive   bool
 }
 
 // GetSelectedSuggestion returns the selected item.

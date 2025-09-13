@@ -21,6 +21,7 @@ type Renderer struct {
 	indentSize        int  // How many spaces constitute a single indentation level
 	maskRune          rune // display the given character instead of the entry (masked password)
 	noEcho            bool // display nothing (except the prefix) at all (more secure)
+	hideInactive      bool // hide suggestions when not completing
 
 	previousCursor Position
 
@@ -115,6 +116,7 @@ func (r *Renderer) renderCompletion(buf *Buffer, completions *CompletionManager)
 	if len(suggestions) == 0 {
 		return
 	}
+
 	prefix := r.prefixCallback()
 	prefixWidth := istrings.GetWidth(prefix)
 	formatted, width := formatSuggestions(
@@ -228,7 +230,9 @@ func (r *Renderer) Render(buffer *Buffer, completion *CompletionManager, lexer L
 	// Log("col: %#v, targetCursor: %#v, cursor: %#v\n", col, targetCursor, cursor)
 	cursor = r.move(cursor, targetCursor)
 
-	r.renderCompletion(buffer, completion)
+	if completion.Completing() {
+		r.renderCompletion(buffer, completion)
+	}
 	r.previousCursor = cursor
 }
 

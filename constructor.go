@@ -279,6 +279,14 @@ func WithStopCompletionAtEnd() Option {
 	}
 }
 
+// WithHideInactiveCompletion to prevent showing the completions unless actively completing.
+func WithHideInactiveCompletion() Option {
+	return func(p *Prompt) error {
+		p.completion.hideInactive = true
+		return nil
+	}
+}
+
 // WithBreakLineCallback to run a callback at every break line
 func WithBreakLineCallback(fn func(*Document)) Option {
 	return func(p *Prompt) error {
