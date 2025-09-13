@@ -30,6 +30,7 @@ func main() {
 		prompt.WithSelectedSuggestionBGColor(prompt.LightGray),
 		prompt.WithSuggestionBGColor(prompt.DarkGray),
 		prompt.WithCompleter(completer),
+		prompt.WithHideInactiveCompletion(),
 	)
 	fmt.Println("Your input: " + in)
 }
