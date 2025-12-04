@@ -135,7 +135,7 @@ func (p *Prompt) Run() {
 			p.Close()
 			os.Exit(code)
 		default:
-			time.Sleep(10 * time.Millisecond)
+			time.Sleep(1 * time.Millisecond)
 		}
 	}
 }
@@ -483,22 +483,18 @@ func (p *Prompt) Input() string {
 	go p.readBuffer(bufCh, stopReadBufCh)
 
 	for {
-		select {
-		case b := <-bufCh:
-			if shouldExit, rerender, input := p.feed(b); shouldExit {
-				p.renderer.BreakLine(p.buffer, p.lexer)
-				stopReadBufCh <- struct{}{}
-				return ""
-			} else if input != nil {
-				// Stop goroutine to run readBuffer function
-				stopReadBufCh <- struct{}{}
-				return input.input
-			} else if rerender {
-				p.completion.Update(*p.buffer.Document())
-				p.renderer.Render(p.buffer, p.completion, p.lexer)
-			}
-		default:
-			time.Sleep(10 * time.Millisecond)
+		b := <-bufCh
+		if shouldExit, rerender, input := p.feed(b); shouldExit {
+			p.renderer.BreakLine(p.buffer, p.lexer)
+			stopReadBufCh <- struct{}{}
+			return ""
+		} else if input != nil {
+			// Stop goroutine to run readBuffer function
+			stopReadBufCh <- struct{}{}
+			return input.input
+		} else if rerender {
+			p.completion.Update(*p.buffer.Document())
+			p.renderer.Render(p.buffer, p.completion, p.lexer)
 		}
 	}
 }
@@ -536,8 +532,6 @@ func (p *Prompt) InputCtx(ctx context.Context) (string, error) {
 			}
 		case <-ctx.Done():
 			return "", ctx.Err()
-		default:
-			time.Sleep(10 * time.Millisecond)
 		}
 	}
 }
