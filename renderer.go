@@ -152,10 +152,15 @@ func (r *Renderer) renderCompletion(buf *Buffer, completions *CompletionManager)
 
 	selected := completions.selected - completions.verticalScroll
 	cursorColumnSpacing := cursor
+	saved := prefixWidth + istrings.Width(completions.endCharIndex)
+	offset := saved
+	if offset+width > r.col {
+		offset = r.col - width
+	}
 
 	r.out.SetColor(White, Cyan, false)
 	for i := 0; i < windowHeight; i++ {
-		alignNextLine(r, cursorColumnSpacing.X)
+		alignNextLine(r, offset)
 
 		if i == selected {
 			r.out.SetColor(r.selectedSuggestionTextColor, r.selectedSuggestionBGColor, true)
@@ -184,16 +189,14 @@ func (r *Renderer) renderCompletion(buf *Buffer, completions *CompletionManager)
 			panic(err)
 		}
 		r.out.SetColor(DefaultColor, DefaultColor, false)
-
-		c := cursor.Add(Position{X: width})
-		r.backward(c, width)
 	}
 
-	if x+width >= r.col {
-		r.out.CursorForward(int(x + width - r.col))
-	}
+	// go back to our saved cursor (at the end of the prompt)
+	r.out.CursorForward(int(saved))
 
-	r.out.CursorUp(windowHeight)
+	_, _ = r.out.WriteString("\r") // go to column 0
+	r.out.CursorUp(windowHeight)   // go back to the prompt (above the box)
+	r.out.CursorForward(int(cursorColumnSpacing.X))
 	r.out.SetColor(DefaultColor, DefaultColor, false)
 }
 
